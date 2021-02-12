@@ -36,7 +36,7 @@ jobs:
         - name: Build (Windows)
           if: runner.os == 'Windows'
           run: |
-              pip install .
+              pip install --verbose .
         - name: Run checks (Windows)
           if: runner.os == 'Windows'
           run: |
