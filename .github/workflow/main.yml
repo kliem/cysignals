@@ -1,6 +1,11 @@
-me: cysignals
+name: cysignals
 
-on: [push, pull-request]
+on:
+    pull_request:
+        types: [opened, synchronize]
+    push:
+        tags:
+            - '*'
 
 jobs:
     build:
