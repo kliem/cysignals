@@ -37,4 +37,4 @@ jobs:
         - name: Build (Windows)
           if: runner.os == 'Windows'
           run: |
-              mingw32-make check-all
+              mingw64-make check-all
