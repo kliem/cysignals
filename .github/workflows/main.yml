@@ -33,6 +33,7 @@ jobs:
         - name: Run check-all (Linux & Mac)
           if: runner.os != 'Windows'
           run: |
+              python setup.py build_ext -i
               make check-all
         - name: Build (Windows)
           if: runner.os == 'Windows'
