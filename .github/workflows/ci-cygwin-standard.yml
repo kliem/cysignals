@@ -19,7 +19,7 @@ jobs:
         strategy:
           fail-fast: false
           matrix:
-            pkgs: [standard]
+            python-version: [35, 36]
         steps:
         - run: |
             git config --global core.autocrlf false
@@ -29,14 +29,7 @@ jobs:
           shell: bash {0}
           run: |
             choco --version
-            PACKAGES=$(sed 's/#.*//;' ./build/pkgs/cygwin.txt ./build/pkgs/cygwin-bootstrap.txt)
-            choco install $PACKAGES --source cygwin
-        - name: install additional cygwin packages with choco
-          if: contains(matrix.pkgs, 'standard')
-          shell: bash {0}
-          run: |
-            PACKAGES=$(sed 's/#.*//;' ./build/pkgs/*/distros/cygwin.txt)
-            choco install $PACKAGES --source cygwin
+            choco install python${{ matrix.python-version }}-devel --source cygwin
         - name: install
           run: |
             C:\\tools\\cygwin\\bin\\bash -l -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make install'
