@@ -30,9 +30,12 @@ jobs:
           run: |
             choco --version
             choco install make autoconf python${{ matrix.python-version }}-devel --source cygwin
+        - name: configure
+          run: |
+            C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make configure && ./configure'
         - name: install
           run: |
-            C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make install PYTHON=python3.6'
+            C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && python3.6 setup.py build_ext -i'
         - name: test
           run: |
             C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make check-all PYTHON=python3.6'
