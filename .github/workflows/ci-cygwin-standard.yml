@@ -29,7 +29,7 @@ jobs:
           shell: bash {0}
           run: |
             choco --version
-            choco install python${{ matrix.python-version }}-devel --source cygwin
+            choco install make python${{ matrix.python-version }}-devel --source cygwin
         - name: install
           run: |
             C:\\tools\\cygwin\\bin\\bash -l -x -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make install'
