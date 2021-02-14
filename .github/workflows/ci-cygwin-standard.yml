@@ -1,0 +1,48 @@
+name: cysignals on cygwin
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+  push:
+    tags:
+      - '*'
+
+env:
+  MAKE: make -j8
+  SAGE_NUM_THREADS: 3
+  CYGWIN: winsymlinks:native
+
+jobs:
+
+############################################## stage-i ##########################################
+
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        pkgs: [standard]
+    steps:
+    - run: |
+        git config --global core.autocrlf false
+        git config --global core.symlinks true
+    - uses: actions/checkout@v1
+    - name: install cygwin and minimal prerequisites with choco
+      shell: bash {0}
+      run: |
+        choco --version
+        PACKAGES=$(sed 's/#.*//;' ./build/pkgs/cygwin.txt ./build/pkgs/cygwin-bootstrap.txt)
+        choco install $PACKAGES --source cygwin
+    - name: install additional cygwin packages with choco
+      if: contains(matrix.pkgs, 'standard')
+      shell: bash {0}
+      run: |
+        PACKAGES=$(sed 's/#.*//;' ./build/pkgs/*/distros/cygwin.txt)
+        choco install $PACKAGES --source cygwin
+    - name: install
+      run: |
+        C:\\tools\\cygwin\\bin\\bash -l -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make install'
+    - name: test
+      run: |
+        C:\\tools\\cygwin\\bin\\bash -l -c 'export PATH=/usr/local/bin:/usr/bin && cd $(cygpath -u "$GITHUB_WORKSPACE") && make check-all'
+
