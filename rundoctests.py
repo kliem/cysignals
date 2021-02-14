@@ -71,7 +71,13 @@ if os.name != 'nt':
     import resource
     # Limit stack size to avoid errors in stack overflow doctest
     stacksize = 1 << 20
-    resource.setrlimit(resource.RLIMIT_STACK, (stacksize, stacksize))
+    if sys.platform == 'darwin':
+        try:
+            resource.setrlimit(resource.RLIMIT_STACK, (stacksize, stacksize))
+        except ValueError:
+            pass
+    else:
+        resource.setrlimit(resource.RLIMIT_STACK, (stacksize, stacksize))
 
     # Disable core dumps
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
